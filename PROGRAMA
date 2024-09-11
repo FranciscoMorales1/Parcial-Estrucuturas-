@@ -1,0 +1,36 @@
+public class Main {
+    public static void main(String[] args) {
+        
+        
+        
+        
+        
+        
+        
+        
+        
+       /* 
+      // Creamos las listas primero profe. 
+      ListaEnlazadaGenerica<Integer> lista1 = new ListaEnlazadaGenerica<>();
+      ListaEnlazadaGenerica<Integer> lista2 = new ListaEnlazadaGenerica<>();
+      
+      //Tenemos que declarar el tamaño 
+   
+      int CantidadLista1 = (int)(Math.random() * (30 - 10 + 1)) + 10;
+      int CantidadLista2 = (int)(Math.random() * (40- 5+ 1)) + +5;
+
+      // Luego tenemos que llenar las listas. 
+      //Llenamos la lista 1
+      
+        for (int i = 1; i < CantidadLista1; i++) {
+            lista1.insertarOrganizada((int)(Math.random() * (550 - 50 + 1)) + 50);         
+        }
+        for (int i = 1; i < CantidadLista2; i++) {
+            lista2.insertarOrganizada((int)(Math.random() * (550 - 50 + 1)) + 50);         
+        }
+        
+        lista1.imprimirLista();
+        lista2.imprimirLista();
+        
+    }
+    }
