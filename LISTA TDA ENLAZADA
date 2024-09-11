@@ -1,0 +1,172 @@
+public class ListaEnlazadaGenerica<T> {
+    Nodo<T> cabeza;    // El primer nodo de la lista, conocido como 'cabeza'.
+    private int tamaño;        // Atributo que mantiene el tamaño de la lista (cantidad de nodos).
+
+    // Constructor que inicializa una lista vacía.
+    public ListaEnlazadaGenerica() {
+        cabeza = null;         // La cabeza de la lista se inicializa como null, lo que significa que la lista está vacía.
+        tamaño = 0;            // El tamaño de la lista se inicializa a 0.
+    }
+
+    // Insertar de manera ordenada.
+    public void insertarOrganizada(T dato) {
+        Nodo<T> nuevoNodo = new Nodo<>(dato);
+        
+        if (cabeza == null) {
+            cabeza = nuevoNodo;  // Asignamos el nuevo nodo a la cabeza si está vacía.
+        } else {
+            // Casteamos los datos a Integer para compararlos (asumiendo que los tipos son Integer).
+            Integer nuevoDato = (Integer) nuevoNodo.getDato();   // Accedemos al valor con un getter.
+            Integer cabezaDato = (Integer) cabeza.getDato();     // Accedemos al valor de cabeza con un getter.
+
+            if (nuevoDato < cabezaDato) {
+                nuevoNodo.setSiguiente(cabeza);  // El nuevo nodo apunta a la cabeza.
+                cabeza = nuevoNodo;              // Ahora el nuevo nodo es la cabeza.
+            } else {
+                Nodo<T> ElPiojo = cabeza;
+
+                while (ElPiojo.getSiguiente() != null && (Integer) ElPiojo.getSiguiente().getDato() < nuevoDato) {
+                    ElPiojo = ElPiojo.getSiguiente();  // Avanzamos al siguiente nodo.
+                }
+
+                nuevoNodo.setSiguiente(ElPiojo.getSiguiente());  // Insertamos el nuevo nodo.
+                ElPiojo.setSiguiente(nuevoNodo);                 // ElPiojo apunta al nuevo nodo.
+            }
+        }
+        tamaño++;  // Incrementamos el tamaño de la lista.
+    }
+
+    // Insertar al inicio de la lista
+    public void insertarAlInicio(T dato) {
+        Nodo<T> nuevoNodo = new Nodo<>(dato);   // Se crea un nuevo nodo con el dato proporcionado.
+        nuevoNodo.setSiguiente(cabeza);         // El nuevo nodo ahora apunta al que era la cabeza anterior.
+        cabeza = nuevoNodo;                     // La cabeza de la lista ahora es el nuevo nodo.
+        tamaño++;                               // Se incrementa el tamaño de la lista.
+    }
+
+    // Insertar al final de la lista
+    public void insertarAlFinal(T dato) {
+        Nodo<T> nuevoNodo = new Nodo<>(dato);   // Se crea un nuevo nodo con el dato proporcionado.
+        if (cabeza == null) {                   // Si la lista está vacía (cabeza es null)
+            cabeza = nuevoNodo;                 // El nuevo nodo se convierte en la cabeza.
+        } else {
+            Nodo<T> actual = cabeza;            // Se recorre la lista comenzando desde la cabeza.
+            while (actual.getSiguiente() != null) {  // Se avanza hasta encontrar el último nodo.
+                actual = actual.getSiguiente();
+            }
+            actual.setSiguiente(nuevoNodo);     // Se asigna el nuevo nodo al final de la lista.
+        }
+        tamaño++;                               // Se incrementa el tamaño de la lista.
+    }
+
+    // Insertar en una posición específica
+    public void insertarEnPosicion(T dato, int indice) {
+        if (indice < 0 || indice > tamaño) {    // Verifica si el índice es válido.
+            throw new IndexOutOfBoundsException("Índice fuera de rango.");
+        }
+        if (indice == 0) {                      // Si el índice es 0, se inserta al inicio.
+            insertarAlInicio(dato);
+        } else {
+            Nodo<T> nuevoNodo = new Nodo<>(dato);  // Se crea un nuevo nodo.
+            Nodo<T> actual = cabeza;               // Se comienza desde la cabeza.
+            for (int i = 0; i < indice - 1; i++) { // Se avanza hasta el nodo antes de la posición deseada.
+                actual = actual.getSiguiente();
+            }
+            nuevoNodo.setSiguiente(actual.getSiguiente());  // El nuevo nodo apunta al siguiente nodo en la lista.
+            actual.setSiguiente(nuevoNodo);                 // El nodo actual ahora apunta al nuevo nodo.
+            tamaño++;                                       // Se incrementa el tamaño de la lista.
+        }
+    }
+
+    // Borrar al inicio de la lista
+    public void borrarAlInicio() {
+        if (cabeza == null) {                   // Si la lista está vacía, lanza una excepción.
+            throw new RuntimeException("La lista está vacía.");
+        }
+        cabeza = cabeza.getSiguiente();         // La cabeza ahora apunta al segundo nodo.
+        tamaño--;                               // Se decrementa el tamaño de la lista.
+    }
+
+    // Borrar al final de la lista
+    public void borrarAlFinal() {
+        if (cabeza == null) {                   // Si la lista está vacía, lanza una excepción.
+            throw new RuntimeException("La lista está vacía.");
+        }
+        if (cabeza.getSiguiente() == null) {    // Si solo hay un nodo, la lista se vacía.
+            cabeza = null;
+        } else {
+            Nodo<T> actual = cabeza;            // Se recorre la lista hasta encontrar el penúltimo nodo.
+            while (actual.getSiguiente().getSiguiente() != null) {
+                actual = actual.getSiguiente();
+            }
+            actual.setSiguiente(null);          // Elimina la referencia al último nodo.
+        }
+        tamaño--;                               // Se decrementa el tamaño de la lista.
+    }
+
+    // Borrar por índice
+    public void borrarPorIndice(int indice) {
+        if (indice < 0 || indice >= tamaño) {   // Verifica si el índice es válido.
+            throw new IndexOutOfBoundsException("Índice fuera de rango.");
+        }
+        if (indice == 0) {                      // Si el índice es 0, se borra al inicio.
+            borrarAlInicio();
+        } else {
+            Nodo<T> actual = cabeza;            // Se recorre la lista hasta encontrar el nodo antes del índice.
+            for (int i = 0; i < indice - 1; i++) {
+                actual = actual.getSiguiente();
+            }
+            actual.setSiguiente(actual.getSiguiente().getSiguiente());  // Se elimina la referencia al nodo en la posición indicada.
+            tamaño--;                                                         // Se decrementa el tamaño de la lista.
+        }
+    }
+
+    // Borrar por dato
+    public void borrarPorDato(T dato) {
+        if (cabeza == null) {                   // Si la lista está vacía, lanza una excepción.
+            throw new RuntimeException("La lista está vacía.");
+        }
+        if (cabeza.getDato().equals(dato)) {    // Si el dato está en la cabeza, se borra al inicio.
+            borrarAlInicio();
+        } else {
+            Nodo<T> actual = cabeza;            // Se recorre la lista buscando el nodo con el dato especificado.
+            while (actual.getSiguiente() != null && !actual.getSiguiente().getDato().equals(dato)) {
+                actual = actual.getSiguiente();
+            }
+            if (actual.getSiguiente() == null) {     // Si no se encuentra el dato, lanza una excepción.
+                throw new RuntimeException("El dato no se encuentra en la lista.");
+            }
+            actual.setSiguiente(actual.getSiguiente().getSiguiente());  // Se elimina el nodo que contiene el dato.
+            tamaño--;                                                         // Se decrementa el tamaño de la lista.
+        }
+    }
+
+    // Buscar un dato en la lista
+    public int buscar(T dato) {
+        Nodo<T> actual = cabeza;               // Se recorre la lista desde la cabeza.
+        int indice = 0;
+        while (actual != null) {               // Mientras no se haya alcanzado el final de la lista.
+            if (actual.getDato().equals(dato)) {    // Si el dato coincide, se devuelve el índice.
+                return indice;
+            }
+            actual = actual.getSiguiente();
+            indice++;
+        }
+        throw new RuntimeException("El dato no se encuentra en la lista.");  // Si no se encuentra el dato.
+    }
+
+    // Imprimir la lista completa
+    public void imprimirLista() {
+        Nodo<T> actual = cabeza;               // Se recorre la lista desde la cabeza.
+        while (actual != null) {               // Mientras haya nodos en la lista.
+            System.out.print(actual.getDato() + " -> ");  // Se imprime el valor de cada nodo.
+            actual = actual.getSiguiente();               // Se avanza al siguiente nodo.
+        }
+        System.out.println("null");            // Indica el final de la lista.
+    }
+
+    // Obtener el tamaño de la lista
+    public int getTamaño() {
+        return tamaño;                         // Devuelve el tamaño actual de la lista.
+    }
+}
